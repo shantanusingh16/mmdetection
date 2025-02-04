@@ -12,18 +12,18 @@ ENV CMAKE_PREFIX_PATH="$(dirname $(which conda))/../"
 RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/3bf863cc.pub
 RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/7fa2af80.pub
 
-RUN apt-get update && apt-get install -y wget bffmpeg libsm6 libxext6 git ninja-build libglib2.0-0 libsm6 libxrender-dev libxext6 \
+RUN apt-get update && apt-get install -y wget ffmpeg libsm6 libxext6 git ninja-build libglib2.0-0 libsm6 libxrender-dev libxext6 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # Install MMCV
 RUN pip install --no-cache-dir --upgrade pip wheel setuptools
-RUN pip install --no-cache-dir mmcv-full==1.3.17 -f https://download.openmmlab.com/mmcv/dist/cu101/torch1.6.0/index.html
+RUN pip install --no-cache-dir mmcv-full==1.3.17 -f https://download.openmmlab.com/mmcv/dist/cu111/torch1.8.0/index.html
 RUN pip install --no-cache-dir torch-model-archiver==0.7.1 yapf==0.40.1
 
 # Install MMDetection
 RUN conda clean --all
-RUN git clone https://github.com/open-mmlab/mmdetection.git /mmdetection
+RUN git clone -b custom-2.28 https://github.com/shantanusingh16/mmdetection.git /mmdetection
 WORKDIR /mmdetection
 ENV FORCE_CUDA="1"
 RUN pip install --no-cache-dir -r requirements/build.txt
